@@ -251,17 +251,25 @@ class SaleChannel(ModelSQL, ModelView):
 
     @classmethod
     @ModelView.button
-    def import_shipping_carriers(cls, channels):
+    def import_shipping_carriers_button(cls, channels):
         """
+        Create shipping carriers by importing data from external channel.
+
+        :param instances: Active record list of sale channels
+        """
+        for channel in channels:
+            channel.import_shipping_carriers()
+
+    def import_shipping_carriers(self):
+        '''
         Create shipping carriers by importing data from external channel.
 
         Since external channels are implemented by downstream modules, it is
         the responsibility of those channels to reuse this method or call super.
-
-        :param instances: Active record list of magento instances
-        """
+        '''
         raise NotImplementedError(
-            "This feature has not been implemented."
+            "This feature has not been implemented for %s channel yet."
+            % self.source
         )
 
     def get_shipping_carrier(self, code, silent=False):
